@@ -25,7 +25,7 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label>Email</label>
-                                                    <input type="text" class="form-control" v-model="form.email" placeholder="Enter Email">
+                                                    <input type="email" class="form-control" v-model="form.email" placeholder="Enter Email">
                                                     <small class="text-danger" v-if="errors.email">{{ errors.email[0] }}</small>
                                                 </div>
                                             </div>
@@ -39,7 +39,7 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label>Salary</label>
-                                                    <input type="text" class="form-control" v-model="form.salary" placeholder="Enter Salary">
+                                                    <input type="number" class="form-control" v-model="form.salary" placeholder="Enter Salary">
                                                     <small class="text-danger" v-if="errors.salary">{{ errors.salary[0] }}</small>
                                                 </div>
                                             </div>
@@ -71,13 +71,13 @@
                                             <div class="form-row">
                                                 <div class="col-md-6">
                                                     <div class="custom-file">
-                                                        <input type="file" class="custom-file-input" id="EmployeePhoto">
-                                                        <label class="custom-file-label" for="EmployeePhoto">Photo</label>
+                                                        <input type="file" class="custom-file-input" id="EmployeePhoto" @change="onFileSelected">
                                                         <small class="text-danger" v-if="errors.photo">{{ errors.photo[0] }}</small>
+                                                        <label class="custom-file-label" for="EmployeePhoto">Photo</label>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <img src="form.photo" alt="" style="height: 40px; width: 40px;">
+                                                    <img :src="form.photo" alt="" style="height: 40px; width: 40px;">
                                                 </div>
                                             </div>
                                         </div>
@@ -121,18 +121,29 @@
         },
 
         methods: {
-            employeeInsert(){
-                axios.post('/api/auth/signup', this.form)
-                    .then(res => {
-                        User.responseAfterLogin(res);
-                        Toast.fire({
-                            icon: 'success',
-                            title: 'Signed in successfully'
-                        });
-                        this.$router.push({ name: 'home' });
+
+            onFileSelected(event) {
+                let file = event.target.files[0];
+                if(file.size > 1048770){
+                    Notifications.image_validation();
+                } else {
+                    let reader = new FileReader();
+                    reader.onload = event => {
+                        this.form.photo = event.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            },
+
+            employeeInsert() {
+                axios.post('/api/employee', this.form)
+                    .then(() => {
+                        this.$router.push({ name: 'index-employee' });
+                        Notifications.success();
                     })
-                    .catch(error => this.errors = error.response.data.errors);
-            }
+                    .catch(error => this.errors = error.response.data.errors)
+            },
+
         }
     }
 </script>

@@ -6,15 +6,15 @@ const forget = require('./components/auth/forget').default;
 const logout = require('./components/auth/logout').default;
 
 /*HOME*/
-const home = require('./components/home').default
+const home = require('./components/home').default;
 
 /*EMPLOYEE*/
-const storeemployee = require('./components/employee/create').default
-const indexemployee = require('./components/employee/index').default
+const storeemployee = require('./components/employee/create').default;
+const indexemployee = require('./components/employee/index').default;
 
 /*SUPPLIER*/
-// const storesupplier = require('./components/suppliers/create').default
-// const indexsupplier = require('./components/suppliers/index').default
+// const storesupplier = require('./components/suppliers/create').default;
+// const indexsupplier = require('./components/suppliers/index').default;
 
 
 export const routes = [
