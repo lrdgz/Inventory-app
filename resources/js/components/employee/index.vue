@@ -5,6 +5,10 @@
                 <router-link to="/store-employee" class="btn btn-primary">Add Employee</router-link>
             </div>
         </div>
+
+        <br>
+        <input type="text" v-model="searchTerm" class="form-control" style="width: 300px;" placeholder="Search Here">
+
         <div class="row justify-content-center">
             <div class="col-xl-12 col-lg-12 col-md-12">
                 <div class="card shadow-sm my-5">
@@ -30,15 +34,15 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <tr v-for="employee in employees" :key="employee.id">
+                                                        <tr v-for="employee in filterSearch" :key="employee.id">
                                                             <td>{{ employee.name }}</td>
                                                             <td><img :src="employee.photo" :alt="employee.name" class="em_photo"></td>
                                                             <td>{{ employee.phone }}</td>
                                                             <td>{{ employee.salary }}</td>
                                                             <td>{{ employee.joining_date }}</td>
                                                             <td>
-                                                                <a href="#" class="btn btn-sm btn-primary">Edit</a>
-                                                                <a href="#" class="btn btn-sm btn-danger">Delete</a>
+                                                                <router-link :to="{ name: 'edit-employee', params: { id: employee.id } }" class="btn btn-sm btn-primary">Edit</router-link>
+                                                                <a @click.prevent="deleteEmployee(employee.id)" href="#" class="btn btn-sm btn-danger">Delete</a>
                                                             </td>
                                                         </tr>
                                                     </tbody>
@@ -63,13 +67,19 @@
             if(!User.loggedIn()){
                 this.$router.push({ name: '/' });
             }
-
-            //Fetching data
             this.allEmployee();
         },
         data(){
             return {
-                employees: []
+                employees: [],
+                searchTerm: ''
+            }
+        },
+        computed: {
+            filterSearch(){
+                return this.employees.filter(employee => {
+                    return employee.name.match(this.searchTerm);
+                });
             }
         },
         methods: {
@@ -77,7 +87,29 @@
                 axios.get('/api/employee/')
                     .then( ({data}) => (this.employees = data))
                     .catch()
-            }
+            },
+            deleteEmployee(id){
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.value) {
+                        axios.delete(`/api/employee/${id}`)
+                            .then( () => {
+                                this.employees = this.employees.filter(employee => {
+                                    return employee.id != id;
+                                });
+                                Swal.fire('Deleted!', 'Your file has been deleted.', 'success');
+                            })
+                            .catch( () => Swal.fire('Error!', 'Your file has not been deleted.', 'error'));
+                    }
+                });
+            },
         }
     }
 </script>

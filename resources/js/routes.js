@@ -10,6 +10,7 @@ const home = require('./components/home').default;
 
 /*EMPLOYEE*/
 const storeemployee = require('./components/employee/create').default;
+const editemployee = require('./components/employee/edit').default;
 const indexemployee = require('./components/employee/index').default;
 
 /*SUPPLIER*/
@@ -30,6 +31,7 @@ export const routes = [
 
     /*EMPLOYEE*/
     { path: '/store-employee', component: storeemployee, name: 'store-employee' },
+    { path: '/edit-employee/:id', component: editemployee, name: 'edit-employee' },
     { path: '/index-employee', component: indexemployee, name: 'index-employee' },
 
 

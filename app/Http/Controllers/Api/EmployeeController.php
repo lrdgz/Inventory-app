@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Employee;
 use Image;
+use DB;
 
 class EmployeeController extends Controller
 {
@@ -46,7 +47,7 @@ class EmployeeController extends Controller
                 $time = time();
                 $name = "{$time}.{$ext}";
                 $img = Image::make($request->photo)->resize(240, 200);
-                $upload_path = 'backend/employee';
+                $upload_path = '/backend/employee';
                 $image_url = "{$upload_path}/{$name}";
                 $img->save($image_url);
             }
@@ -77,7 +78,8 @@ class EmployeeController extends Controller
      */
     public function show($id)
     {
-        //
+        $employee = DB::table('employees')->where('id', $id)->first();
+        return response()->json($employee);
     }
 
     /**
@@ -89,7 +91,46 @@ class EmployeeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $data = [];
+        $data['name'] = $request->name;
+        $data['email'] = $request->email;
+        $data['phone'] = $request->phone;
+        $data['salary'] = $request->salary;
+        $data['address'] = $request->address;
+        $data['nid'] = $request->nid;
+        $data['joining_date'] = $request->joining_date;
+
+        $image = $request->newphoto;
+        $success = false;
+        $image_url = '';
+
+        if ($image) {
+            $position = strpos($image, ';');
+            $sub = substr($image, 0, $position);
+            $ext = explode('/', $sub)[1];
+
+            $time = time();
+            $name = "{$time}.{$ext}";
+            $img = Image::make($image)->resize(240, 200);
+            $upload_path = 'backend/employee';
+            $image_url = "{$upload_path}/{$name}";
+            $success = $img->save($image_url);
+        }
+
+        if($success) {
+            $data['photo'] = $image_url;
+            $employee = DB::table('employees')->where('id', $id)->first();
+            $photo = $employee->photo;
+            if($photo){
+                unlink($photo);
+            }
+        } else {
+            $data['photo'] = $request->photo;
+        }
+
+        $employee = DB::table('employees')->where('id', $id)->update($data);
+
+        return response()->json(['message' => 'Successfully Updated', 'employee' => $employee], 200);
     }
 
     /**
@@ -100,6 +141,11 @@ class EmployeeController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $employee = DB::table('employees')->where('id', $id)->first();
+        $photo = $employee->photo;
+        if($photo){
+            unlink($photo);
+        }
+        DB::table('employees')->where('id', $id)->delete();
     }
 }
