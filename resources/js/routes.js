@@ -18,6 +18,10 @@ const storesupplier = require('./components/suppliers/create').default;
 const editsupplier = require('./components/suppliers/edit').default;
 const indexsupplier = require('./components/suppliers/index').default;
 
+/*CATEGORY*/
+const storecategory = require('./components/categories/create').default;
+const editcategory = require('./components/categories/edit').default;
+const indexcategory = require('./components/categories/index').default;
 
 export const routes = [
 
@@ -39,4 +43,9 @@ export const routes = [
     { path: '/store-supplier', component: storesupplier, name: 'store-supplier' },
     { path: '/edit-supplier/:id', component: editsupplier, name: 'edit-supplier' },
     { path: '/index-supplier', component: indexsupplier, name: 'index-supplier' },
+
+    /*CATEGORY*/
+    { path: '/store-category', component: storecategory, name: 'store-category' },
+    { path: '/edit-category/:id', component: editcategory, name: 'edit-category' },
+    { path: '/index-category', component: indexcategory, name: 'index-category' },
 ];
