@@ -23,6 +23,11 @@ const storecategory = require('./components/categories/create').default;
 const editcategory = require('./components/categories/edit').default;
 const indexcategory = require('./components/categories/index').default;
 
+/*PRODUCT*/
+const storeproducts = require('./components/products/create').default;
+const editproducts = require('./components/products/edit').default;
+const indexproducts = require('./components/products/index').default;
+
 export const routes = [
 
     /*AUTH*/
@@ -48,4 +53,9 @@ export const routes = [
     { path: '/store-category', component: storecategory, name: 'store-category' },
     { path: '/edit-category/:id', component: editcategory, name: 'edit-category' },
     { path: '/index-category', component: indexcategory, name: 'index-category' },
+
+    /*PRODUCT*/
+    { path: '/store-product', component: storeproducts, name: 'store-product' },
+    { path: '/edit-product/:id', component: editproducts, name: 'edit-product' },
+    { path: '/index-product', component: indexproducts, name: 'index-product' },
 ];
