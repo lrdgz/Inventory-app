@@ -280,8 +280,8 @@
     <script>
         const token = localStorage.getItem('token');
         if(token){
-            $("#sidebar").css('display', '')
-            $("#topbar").css('display', '')
+            $("#sidebar").css('display', '');
+            $("#topbar").css('display', '');
         }
     </script>
 
