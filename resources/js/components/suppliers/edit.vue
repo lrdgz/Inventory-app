@@ -13,9 +13,9 @@
                             <div class="col-lg-12">
                                 <div class="login-form">
                                     <div class="text-center">
-                                        <h1 class="h4 text-gray-900 mb-4">Add Supplier</h1>
+                                        <h1 class="h4 text-gray-900 mb-4">Update Supplier</h1>
                                     </div>
-                                    <form class="user" @submit.prevent="supplierInsert" enctype="multipart/form-data">
+                                    <form class="user" @submit.prevent="employeeUpdate" enctype="multipart/form-data">
                                         <div class="form-group">
                                             <div class="form-row">
                                                 <div class="col-md-6">
@@ -39,7 +39,7 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label>Shop Name</label>
-                                                    <input type="text" class="form-control" v-model="form.shopname" placeholder="Enter Shop Name">
+                                                    <input type="text" class="form-control" v-model="form.shopname" placeholder="Enter Full Name">
                                                     <small class="text-danger" v-if="errors.shopname">{{ errors.shopname[0] }}</small>
                                                 </div>
                                             </div>
@@ -57,18 +57,18 @@
                                             <div class="form-row">
                                                 <div class="col-md-6">
                                                     <div class="custom-file">
-                                                        <input type="file" class="custom-file-input" id="SupplierPhoto" @change="onFileSelected" accept="image/x-png,image/gif,image/jpeg">
+                                                        <input type="file" class="custom-file-input" id="EmployeePhoto" @change="onFileSelected">
                                                         <small class="text-danger" v-if="errors.photo">{{ errors.photo[0] }}</small>
-                                                        <label class="custom-file-label" for="SupplierPhoto">Photo</label>
+                                                        <label class="custom-file-label" for="EmployeePhoto">Photo</label>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <img :src="form.photo" alt="" style="height: 40px; width: 40px;">
+                                                    <img :src="form.photo" :alt="form.name" style="height: 40px; width: 40px;">
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                                            <button type="submit" class="btn btn-primary btn-block">Update</button>
                                         </div>
                                         <hr>
                                     </form>
@@ -88,17 +88,23 @@
             if(!User.loggedIn()){
                 this.$router.push({ name: '/' });
             }
+
+            let id = this.$route.params.id;
+            axios.get(`/api/supplier/${id}`)
+                .then(({ data }) => (this.form = data))
+                .catch(console.log('Error'));
         },
 
         data(){
             return{
                 form: {
-                    name: null,
-                    email: null,
-                    phone: null,
-                    address: null,
-                    photo: null,
-                    shopname: null,
+                    name: '',
+                    email: '',
+                    phone: '',
+                    shopname: '',
+                    address: '',
+                    photo: '',
+                    newphoto: '',
                 },
                 errors: {},
             }
@@ -113,14 +119,15 @@
                 } else {
                     let reader = new FileReader();
                     reader.onload = event => {
-                        this.form.photo = event.target.result;
+                        this.form.newphoto = event.target.result;
                     };
                     reader.readAsDataURL(file);
                 }
             },
 
-            supplierInsert() {
-                axios.post('/api/supplier', this.form)
+            employeeUpdate() {
+                let id = this.$route.params.id;
+                axios.patch(`/api/supplier/${id}`, this.form)
                     .then(() => {
                         this.$router.push({ name: 'index-supplier' });
                         Notifications.success();

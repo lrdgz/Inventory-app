@@ -71,7 +71,7 @@
                                             <div class="form-row">
                                                 <div class="col-md-6">
                                                     <div class="custom-file">
-                                                        <input type="file" class="custom-file-input" id="EmployeePhoto" @change="onFileSelected">
+                                                        <input type="file" class="custom-file-input" id="EmployeePhoto" @change="onFileSelected" accept="image/x-png,image/gif,image/jpeg">
                                                         <small class="text-danger" v-if="errors.photo">{{ errors.photo[0] }}</small>
                                                         <label class="custom-file-label" for="EmployeePhoto">Photo</label>
                                                     </div>
