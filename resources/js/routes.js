@@ -28,11 +28,17 @@ const storeproducts = require('./components/products/create').default;
 const editproducts = require('./components/products/edit').default;
 const indexproducts = require('./components/products/index').default;
 
-
 /*EXPENSE*/
 const storeexpenses = require('./components/expenses/create').default;
 const editexpenses = require('./components/expenses/edit').default;
 const indexexpenses= require('./components/expenses/index').default;
+
+/*SALARY*/
+const salary = require('./components/salaries/all_employee').default;
+const paysalary = require('./components/salaries/create').default;
+const allsalary = require('./components/salaries/index').default;
+const viewsalary = require('./components/salaries/view').default;
+const editsalary = require('./components/salaries/edit').default;
 
 export const routes = [
 
@@ -69,4 +75,11 @@ export const routes = [
     { path: '/store-expense', component: storeexpenses, name: 'store-expense' },
     { path: '/edit-expense/:id', component: editexpenses, name: 'edit-expense' },
     { path: '/index-expense', component: indexexpenses, name: 'index-expense' },
+
+    /*SALARY*/
+    { path: '/given-salary', component: salary, name: 'given-salary' },
+    { path: '/pay-salary/:id', component: paysalary, name: 'pay-salary' },
+    { path: '/salary', component: allsalary, name: 'salary' },
+    { path: '/view-salary/:salary_year/:salary_month', component: viewsalary, name: 'view-salary' },
+    { path: '/edit-salary/:id', component: editsalary, name: 'edit-salary' },
 ];
