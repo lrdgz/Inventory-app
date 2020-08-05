@@ -117,7 +117,12 @@
                             </div>
                         </div>
                     </li>
-                    <hr class="sidebar-divider">
+                    <li class="nav-item">
+                        <router-link to="/stock" class="nav-link">
+                            <i class="far fa-fw fa-window-maximize"></i>
+                            <span>Stock</span>
+                        </router-link>
+                    </li>
                 </ul>
             </nav>
             <!-- Sidebar -->

@@ -40,6 +40,9 @@ const allsalary = require('./components/salaries/index').default;
 const viewsalary = require('./components/salaries/view').default;
 const editsalary = require('./components/salaries/edit').default;
 
+/*STOC*/
+const stock= require('./components/products/stock').default;
+
 export const routes = [
 
     /*AUTH*/
@@ -82,4 +85,7 @@ export const routes = [
     { path: '/salary', component: allsalary, name: 'salary' },
     { path: '/view-salary/:salary_year/:salary_month', component: viewsalary, name: 'view-salary' },
     { path: '/edit-salary/:id', component: editsalary, name: 'edit-salary' },
+
+    /*STOCK*/
+    { path: '/stock', component: stock, name: 'stock' },
 ];
