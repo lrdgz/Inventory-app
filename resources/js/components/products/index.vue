@@ -2,7 +2,7 @@
     <div>
         <div class="row justify-content-center">
             <div class="col-xl-12 col-lg-12 col-md-12">
-                <router-link to="/store-supplier" class="btn btn-primary">Add Product</router-link>
+                <router-link to="/store-product" class="btn btn-primary">Add Product</router-link>
             </div>
         </div>
 
