@@ -19,28 +19,34 @@
                                     <div class="col-lg-12">
                                         <div class="card">
                                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                                <h6 class="m-0 font-weight-bold text-primary">Supplier List</h6>
+                                                <h6 class="m-0 font-weight-bold text-primary">Product List</h6>
                                             </div>
                                             <div class="table-responsive">
                                                 <table class="table align-items-center table-flush">
                                                     <thead class="thead-light">
                                                         <tr>
                                                             <th>Name</th>
+                                                            <th>Code</th>
                                                             <th>Photo</th>
-                                                            <th>Phone</th>
-                                                            <th>Shop Name</th>
+                                                            <th>Category</th>
+                                                            <th>Buying Price</th>
+                                                            <th>Selling Price</th>
+                                                            <th>Root</th>
                                                             <th>Actions</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <tr v-for="supplier in filterSearch" :key="supplier.id">
-                                                            <td>{{ supplier.name }}</td>
-                                                            <td><img :src="supplier.photo" :alt="supplier.name" class="em_photo"></td>
-                                                            <td>{{ supplier.phone }}</td>
-                                                            <td>{{ supplier.shopname }}</td>
+                                                        <tr v-for="product in filterSearch" :key="product.id">
+                                                            <td>{{ product.product_name }}</td>
+                                                            <td>{{ product.product_code }}</td>
+                                                            <td><img :src="product.image" :alt="product.product_name" class="em_photo"></td>
+                                                            <td>{{ product.category_name }}</td>
+                                                            <td>{{ product.buying_price }}</td>
+                                                            <td>{{ product.selling_price }}</td>
+                                                            <td>{{ product.root }}</td>
                                                             <td>
-                                                                <router-link :to="{ name: 'edit-supplier', params: { id: supplier.id } }" class="btn btn-sm btn-primary">Edit</router-link>
-                                                                <a @click.prevent="deleteSupplier(supplier.id)" href="#" class="btn btn-sm btn-danger">Delete</a>
+                                                                <router-link :to="{ name: 'edit-product', params: { id: product.id } }" class="btn btn-sm btn-primary">Edit</router-link>
+                                                                <a @click.prevent="deleteProduct(product.id)" href="#" class="btn btn-sm btn-danger">Delete</a>
                                                             </td>
                                                         </tr>
                                                     </tbody>
@@ -65,28 +71,28 @@
             if(!User.loggedIn()){
                 this.$router.push({ name: '/' });
             }
-            this.allEmployee();
+            this.allProduct();
         },
         data(){
             return {
-                suppliers: [],
+                products: [],
                 searchTerm: ''
             }
         },
         computed: {
             filterSearch(){
-                return this.suppliers.filter(supplier => {
-                    return supplier.name.match(this.searchTerm);
+                return this.products.filter(product => {
+                    return product.name.match(this.searchTerm);
                 });
             }
         },
         methods: {
-            allEmployee(){
-                axios.get('/api/supplier/')
-                    .then( ({data}) => (this.suppliers = data))
+            allProduct(){
+                axios.get('/api/product/')
+                    .then( ({data}) => (this.products = data))
                     .catch()
             },
-            deleteSupplier(id){
+            deleteProduct(id){
                 Swal.fire({
                     title: 'Are you sure?',
                     text: "You won't be able to revert this!",
@@ -97,10 +103,10 @@
                     confirmButtonText: 'Yes, delete it!'
                 }).then((result) => {
                     if (result.value) {
-                        axios.delete(`/api/supplier/${id}`)
+                        axios.delete(`/api/product/${id}`)
                             .then( () => {
-                                this.suppliers = this.suppliers.filter(supplier => {
-                                    return supplier.id != id;
+                                this.products = this.products.filter(product => {
+                                    return product.id !== id;
                                 });
                                 Swal.fire('Deleted!', 'Your file has been deleted.', 'success');
                             })

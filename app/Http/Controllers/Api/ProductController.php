@@ -96,7 +96,8 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        //
+        $product = DB::table('products')->where('id', $id)->first();
+        return response()->json($product);
     }
 
     /**
@@ -108,7 +109,49 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $data = [];
+
+        $data['product_name'] = $request->product_name;
+        $data['product_code'] = $request->product_code;
+        $data['category_id'] = $request->category_id;
+        $data['supplier_id'] = $request->supplier_id;
+        $data['root'] = $request->root;
+        $data['buying_price'] = $request->buying_price;
+        $data['selling_price'] = $request->selling_price;
+        $data['buying_date'] = $request->buying_date;
+        $data['product_quantity'] = $request->product_quantity;
+
+        $image = $request->newImage;
+        $success = false;
+        $image_url = '';
+
+        if ($image) {
+            $position = strpos($image, ';');
+            $sub = substr($image, 0, $position);
+            $ext = explode('/', $sub)[1];
+
+            $time = time();
+            $name = "{$time}.{$ext}";
+            $img = Image::make($image)->resize(240, 200);
+            $upload_path = 'backend/product';
+            $image_url = "{$upload_path}/{$name}";
+            $success = $img->save($image_url);
+        }
+
+        if($success) {
+            $data['image'] = $image_url;
+            $product = DB::table('products')->where('id', $id)->first();
+            $photo = $product->image;
+            if($photo){
+                unlink($photo);
+            }
+        } else {
+            $data['image'] = $request->image;
+        }
+
+        $product = DB::table('products')->where('id', $id)->update($data);
+
+        return response()->json(['message' => 'Successfully Updated', 'product' => $product], 200);
     }
 
     /**
@@ -119,6 +162,11 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $product = DB::table('products')->where('id', $id)->first();
+        $photo = $product->image;
+        if($photo){
+            unlink($photo);
+        }
+        DB::table('products')->where('id', $id)->delete();
     }
 }
