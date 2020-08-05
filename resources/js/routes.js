@@ -28,6 +28,12 @@ const storeproducts = require('./components/products/create').default;
 const editproducts = require('./components/products/edit').default;
 const indexproducts = require('./components/products/index').default;
 
+
+/*EXPENSE*/
+const storeexpenses = require('./components/expenses/create').default;
+const editexpenses = require('./components/expenses/edit').default;
+const indexexpenses= require('./components/expenses/index').default;
+
 export const routes = [
 
     /*AUTH*/
@@ -58,4 +64,9 @@ export const routes = [
     { path: '/store-product', component: storeproducts, name: 'store-product' },
     { path: '/edit-product/:id', component: editproducts, name: 'edit-product' },
     { path: '/index-product', component: indexproducts, name: 'index-product' },
+
+    /*EXPENSE*/
+    { path: '/store-expense', component: storeexpenses, name: 'store-expense' },
+    { path: '/edit-expense/:id', component: editexpenses, name: 'edit-expense' },
+    { path: '/index-expense', component: indexexpenses, name: 'index-expense' },
 ];
