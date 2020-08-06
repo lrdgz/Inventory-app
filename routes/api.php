@@ -32,3 +32,5 @@ Route::post('/salary/update/{id}', 'Api\SalaryController@updateSalary');
 
 
 Route::post('/stock/update/{product}', 'Api\ProductController@stockUpdate');
+
+Route::get('/getting/product/{category}', 'Api\PosController@getProduct');

@@ -118,7 +118,7 @@
     }
 </script>
 
-<style type="text/css">
+<style type="text/css" scoped>
     .em_photo{
         height: 40px;
         width: 40px;

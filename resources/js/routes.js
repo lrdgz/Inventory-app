@@ -8,6 +8,9 @@ const logout = require('./components/auth/logout').default;
 /*HOME*/
 const home = require('./components/home').default;
 
+/*POS*/
+const pos = require('./components/pos/point-of-sale').default;
+
 /*EMPLOYEE*/
 const storeemployee = require('./components/employee/create').default;
 const editemployee = require('./components/employee/edit').default;
@@ -59,6 +62,9 @@ export const routes = [
 
     /*HOME*/
     { path: '/home', component: home, name: 'home' },
+
+    /*POS*/
+    { path: '/pos', component: pos, name: 'pos' },
 
     /*EMPLOYEE*/
     { path: '/store-employee', component: storeemployee, name: 'store-employee' },
