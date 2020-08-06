@@ -35,6 +35,9 @@
                     <li class="nav-item active">
                         <router-link class="nav-link" to="/home"><i class="fas fa-fw fa-tachometer-alt"></i><span>Dashboard</span></router-link>
                     </li>
+                    <li class="nav-item bg-info">
+                        <router-link class="nav-link" to="/pos"><i class="fas fa-fw fa-tachometer-alt"></i><span>POS</span></router-link>
+                    </li>
                     <hr class="sidebar-divider">
                     <div class="sidebar-heading">
                         Features
@@ -105,6 +108,19 @@
                         </div>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCustomer"
+                           aria-expanded="true" aria-controls="collapseBootstrap">
+                            <i class="far fa-fw fa-window-maximize"></i>
+                            <span>Customers</span>
+                        </a>
+                        <div id="collapseCustomer" class="collapse" aria-labelledby="headingBootstrap" data-parent="#accordionSidebar">
+                            <div class="bg-white py-2 collapse-inner rounded">
+                                <router-link class="collapse-item" to="/store-customer">Add Customer</router-link>
+                                <router-link class="collapse-item" to="/index-customer">All Customer</router-link>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSalary"
                            aria-expanded="true" aria-controls="collapseBootstrap">
                             <i class="far fa-fw fa-window-maximize"></i>
@@ -122,6 +138,19 @@
                             <i class="far fa-fw fa-window-maximize"></i>
                             <span>Stock</span>
                         </router-link>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseReport"
+                           aria-expanded="true" aria-controls="collapseBootstrap">
+                            <i class="fas fa-fw fa-table"></i>
+                            <span>Reports</span>
+                        </a>
+                        <div id="collapseReport" class="collapse" aria-labelledby="headingBootstrap" data-parent="#accordionSidebar">
+                            <div class="bg-white py-2 collapse-inner rounded">
+                                <router-link class="collapse-item" to="/given-salary">Report One</router-link>
+                                <router-link class="collapse-item" to="/salary">Report Two</router-link>
+                            </div>
+                        </div>
                     </li>
                 </ul>
             </nav>

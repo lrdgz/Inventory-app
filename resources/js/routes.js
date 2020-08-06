@@ -13,6 +13,11 @@ const storeemployee = require('./components/employee/create').default;
 const editemployee = require('./components/employee/edit').default;
 const indexemployee = require('./components/employee/index').default;
 
+/*CUSTOMER*/
+const storecustomer = require('./components/customers/create').default;
+const editcustomer = require('./components/customers/edit').default;
+const indexcustomer = require('./components/customers/index').default;
+
 /*SUPPLIER*/
 const storesupplier = require('./components/suppliers/create').default;
 const editsupplier = require('./components/suppliers/edit').default;
@@ -59,6 +64,11 @@ export const routes = [
     { path: '/store-employee', component: storeemployee, name: 'store-employee' },
     { path: '/edit-employee/:id', component: editemployee, name: 'edit-employee' },
     { path: '/index-employee', component: indexemployee, name: 'index-employee' },
+
+    /*CUSTOMER*/
+    { path: '/store-customer', component: storecustomer, name: 'store-customer' },
+    { path: '/edit-customer/:id', component: editcustomer, name: 'edit-customer' },
+    { path: '/index-customer', component: indexcustomer, name: 'index-customer' },
 
     /*SUPPLIER*/
     { path: '/store-supplier', component: storesupplier, name: 'store-supplier' },
