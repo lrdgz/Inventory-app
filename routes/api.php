@@ -28,3 +28,6 @@ Route::get('/salary/', 'Api\SalaryController@allSalary');
 Route::get('/edit/salary/{id}', 'Api\SalaryController@editSalary');
 Route::get('/salary/view/{year}/{month}', 'Api\SalaryController@viewSalary');
 Route::post('/salary/update/{id}', 'Api\SalaryController@updateSalary');
+
+
+Route::post('/stock/update/{product}', 'Api\ProductController@stockUpdate');

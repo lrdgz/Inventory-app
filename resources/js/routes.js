@@ -42,6 +42,7 @@ const editsalary = require('./components/salaries/edit').default;
 
 /*STOC*/
 const stock= require('./components/products/stock').default;
+const editstock= require('./components/products/edit-stock').default;
 
 export const routes = [
 
@@ -88,4 +89,5 @@ export const routes = [
 
     /*STOCK*/
     { path: '/stock', component: stock, name: 'stock' },
+    { path: '/edit-stock/:id', component: editstock, name: 'edit-stock' },
 ];
