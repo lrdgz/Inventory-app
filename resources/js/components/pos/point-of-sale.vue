@@ -59,7 +59,7 @@
                                 </li>
                             </ul>
                             <br>
-                            <form action="">
+                            <form action="" @submit.prevent="orderdone">
                                 <label>Customer Name</label>
                                 <select name="" class="form-control" v-model="customer_id">
                                     <option v-for="customer in customers" :key="customer.id" :value="customer.id">
@@ -71,7 +71,7 @@
                                 <label>Due</label>
                                 <input type="text" class="form-control" required v-model="due" />
                                 <label>Pay By</label>
-                                <select name="" class="form-control" v-model="customer_id">
+                                <select name="" class="form-control" v-model="pay_by">
                                     <option value="HandCash">Hand Cash</option>
                                     <option value="Cheaque">Cheaque</option>
                                     <option value="GiftCard">Gift Card</option>
@@ -175,6 +175,7 @@
                 customer_id:'',
                 pay:'',
                 due:'',
+                pay_by:'',
             }
         },
         computed: {
@@ -271,6 +272,26 @@
                     .then( ({data}) => (this.data_extra = data))
                     .catch()
             },
+
+            orderdone(){
+                const data = {
+                    qty: this.qty,
+                    subtotal: this.subtotal,
+                    customer_id: this.customer_id,
+                    pay: this.pay,
+                    vat: this.extras.vat,
+                    due: this.due,
+                    pay_by: this.pay_by,
+                    total: this.total
+                };
+
+                axios.post('/api/orderdone', data)
+                    .then(() => {
+                        Notifications.success();
+                        this.$router.push({ name: 'home' });
+                    })
+                    .catch();
+            }
         }
     }
 </script>

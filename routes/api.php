@@ -42,3 +42,5 @@ Route::get('/cart/decrement/{id}', 'Api\CartController@decrementCart');
 
 
 Route::get('extras', 'Api\CartController@extras');
+
+Route::post('/orderdone', 'Api\PosController@orderDone');
