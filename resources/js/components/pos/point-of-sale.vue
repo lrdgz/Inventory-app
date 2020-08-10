@@ -19,7 +19,7 @@
                         <div class="table-responsive" style="font-size: 10px;">
                             <table class="table align-items-center table-flush">
                                 <thead class="thead-light">
-                                    <tr>
+                                    <tr class="p-0">
                                         <th>Name</th>
                                         <th>Qty</th>
                                         <th>Unit</th>
@@ -28,12 +28,16 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td><a href="#">Name</a></td>
-                                        <td>Qty</td>
-                                        <td>Unit</td>
-                                        <td>Total</td>
-                                        <td><a href="#" class="btn btn-sm btn-primary">Detail</a></td>
+                                    <tr v-for="cart in carts" :key="cart.id">
+                                        <td>{{ cart.pro_name }}</td>
+                                        <td>
+                                            <button @click="increment(cart.id)" class="btn btn-sm btn-danger">-</button>
+                                            <input type="text" readonly :value="cart.pro_quantity" style="width: 20px;">
+                                            <button @click="decrement(cart.id)" class="btn btn-sm btn-success">+</button>
+                                        </td>
+                                        <td>{{ cart.product_price }}</td>
+                                        <td>{{ cart.sub_total }}</td>
+                                        <td><a @click="removeItem(cart.id)" class="btn btn-sm btn-primary text-white">X</a></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -99,14 +103,14 @@
                                 <div class="row mt-2">
                                     <div class="col-lg-3 col-md-3 col-sm-6 col-6 p-0" v-for="product in filterProduct" :key="product.id">
                                         <div class="card" style="width: 8.5rem; margin-bottom: 5px;">
-                                            <a href="#">
-                                                <img :src="product.image" :alt="product.product_name" class="card-img-top em_photo_product">
+                                            <button class="btn btn-sm" @click.prevent="AddToCart(product.id)">
+                                                <img :src="product.image" :alt="product.product_name" class="card-img-top img-fluid">
                                                 <div class="card-body">
                                                     <h5 class="card-title">{{ product.product_name }}</h5>
                                                     <span class="badge badge-success" v-if=" product.product_quantity >= 1">Available {{ product.product_quantity }}</span>
                                                     <span class="badge badge-danger"  v-else>Stock Out</span>
                                                 </div>
-                                            </a>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -147,6 +151,10 @@
             this.allProduct();
             this.allCategories();
             this.allCustomers();
+            this.CartProduct();
+            Reload.$on('AfterAdd', () => {
+                this.CartProduct();
+            });
         },
         data(){
             return {
@@ -155,6 +163,7 @@
                 getProducts: [],
                 customers: [],
                 errors: [],
+                carts: [],
 
                 searchProduct: '',
                 searchProductFilter: '',
@@ -197,6 +206,45 @@
                     .then( ({data}) => (this.customers = data))
                     .catch(console.log('Error'))
             },
+
+            //Cart Methods Here
+            AddToCart(product){
+                axios.get(`/api/addToCart/${product}`)
+                    .then( ({data}) => {
+                        Reload.$emit('AfterAdd');
+                        Notifications.cart_success(data.pro_name);
+                    })
+                    .catch()
+            },
+            CartProduct(){
+                axios.get(`/api/cart/product`)
+                    .then( ({data}) => (this.carts = data) )
+                    .catch()
+            },
+            removeItem(item){
+                axios.get(`/api/cart/remove/${item}`)
+                    .then( () => {
+                        Reload.$emit('AfterAdd');
+                        Notifications.cart_delete();
+                    })
+                    .catch()
+            },
+            decrement(item){
+                axios.get(`/api/cart/increment/${item}`)
+                    .then( () => {
+                        Reload.$emit('AfterAdd');
+                        Notifications.success();
+                    })
+                    .catch()
+            },
+            increment(item){
+                axios.get(`/api/cart/decrement/${item}`)
+                    .then( () => {
+                        Reload.$emit('AfterAdd');
+                        Notifications.success();
+                    })
+                    .catch()
+            },
         }
     }
 </script>
@@ -205,5 +253,10 @@
     .em_photo_product{
         height: 90px;
         width: 135px;
+    }
+
+    .remove-margin{
+        margin-right: 0 !important;
+        margin-left: 0 !important;;
     }
 </style>
