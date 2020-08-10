@@ -20,7 +20,6 @@ class CartController extends Controller
             $update = DB::table('pos')->where('pro_id',  $product->id)->first();
             $subtotal = $update->pro_quantity * $update->product_price;
             DB::table('pos')->where('pro_id', $update->pro_id)->update(['sub_total' => $subtotal]);
-
         } else {
             $data['pro_id'] = $product->id;
             $data['pro_name'] = $product->product_name;
@@ -57,6 +56,11 @@ class CartController extends Controller
         $subtotal = $product->pro_quantity * $product->product_price;
         DB::table('pos')->where('id', $id)->update(['sub_total' => $subtotal]);
         return response()->json('Done');
+    }
+
+    public function extras(){
+       $extras =  DB::table('extra')->first();
+       return response()->json($extras);
     }
 
 }

@@ -31,7 +31,8 @@
                                     <tr v-for="cart in carts" :key="cart.id">
                                         <td>{{ cart.pro_name }}</td>
                                         <td>
-                                            <button @click="increment(cart.id)" class="btn btn-sm btn-danger">-</button>
+                                            <button @click="increment(cart.id)" class="btn btn-sm btn-danger" v-if="cart.pro_quantity >= 2">-</button>
+                                            <button class="btn btn-sm btn-danger" v-else="" disabled="">-</button>
                                             <input type="text" readonly :value="cart.pro_quantity" style="width: 20px;">
                                             <button @click="decrement(cart.id)" class="btn btn-sm btn-success">+</button>
                                         </td>
@@ -45,16 +46,16 @@
                         <div class="card-footer">
                             <ul class="list-group">
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    Total Quantity: <strong>500</strong>
+                                    Total Quantity: <strong>{{ qty }}</strong>
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    Sub Total: <strong>500.00 $</strong>
+                                    Sub Total: <strong>{{ subtotal }} $</strong>
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    Vat: <strong>35 %</strong>
+                                    Vat: <strong>{{ data_extra.vat }} %</strong>
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    Total: <strong>1500.00 $</strong>
+                                    Total: <strong>{{ total }} $</strong>
                                 </li>
                             </ul>
                             <br>
@@ -120,14 +121,14 @@
                                 <div class="row mt-2">
                                     <div class="col-lg-3 col-md-3 col-sm-6 col-6 p-0" v-for="getProduct in filterProductSearch" :key="getProduct.id">
                                         <div class="card" style="width: 8.5rem; margin-bottom: 5px;">
-                                            <a href="#">
-                                                <img :src="getProduct.image" :alt="getProduct.product_name" class="card-img-top em_photo_product">
+                                            <button class="btn btn-sm" @click.prevent="AddToCart(getProduct.id)">
+                                                <img :src="getProduct.image" :alt="getProduct.product_name" class="card-img-top img-fluid">
                                                 <div class="card-body">
                                                     <h5 class="card-title">{{ getProduct.product_name }}</h5>
                                                     <span class="badge badge-success" v-if=" getProduct.product_quantity >= 1">Available {{ getProduct.product_quantity }}</span>
                                                     <span class="badge badge-danger"  v-else>Stock Out</span>
                                                 </div>
-                                            </a>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -152,6 +153,7 @@
             this.allCategories();
             this.allCustomers();
             this.CartProduct();
+            this.extras();
             Reload.$on('AfterAdd', () => {
                 this.CartProduct();
             });
@@ -164,6 +166,8 @@
                 customers: [],
                 errors: [],
                 carts: [],
+
+                data_extra: [],
 
                 searchProduct: '',
                 searchProductFilter: '',
@@ -183,6 +187,23 @@
                 return this.getProducts.filter(getProduct => {
                     return getProduct.product_name.match(this.searchProductFilter);
                 });
+            },
+            qty(){
+                let sum = 0;
+                for(let i =0; i < this.carts.length; i++){
+                    sum += (parseFloat(this.carts[i].pro_quantity));
+                }
+                return sum;
+            },
+            subtotal(){
+                let subtotal = 0;
+                for(let i =0; i < this.carts.length; i++){
+                    subtotal += (parseFloat(this.carts[i].pro_quantity) * parseFloat(this.carts[i].product_price));
+                }
+                return subtotal;
+            },
+            total(){
+                return (((parseFloat(this.subtotal) * this.data_extra.vat) / 100) + this.subtotal);
             },
         },
         methods: {
@@ -243,6 +264,11 @@
                         Reload.$emit('AfterAdd');
                         Notifications.success();
                     })
+                    .catch()
+            },
+            extras(){
+                axios.get('/api/extras')
+                    .then( ({data}) => (this.data_extra = data))
                     .catch()
             },
         }

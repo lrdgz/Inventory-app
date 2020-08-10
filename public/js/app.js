@@ -4237,6 +4237,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   created: function created() {
     var _this = this;
@@ -4251,6 +4252,7 @@ __webpack_require__.r(__webpack_exports__);
     this.allCategories();
     this.allCustomers();
     this.CartProduct();
+    this.extras();
     Reload.$on('AfterAdd', function () {
       _this.CartProduct();
     });
@@ -4263,6 +4265,7 @@ __webpack_require__.r(__webpack_exports__);
       customers: [],
       errors: [],
       carts: [],
+      data_extra: [],
       searchProduct: '',
       searchProductFilter: '',
       customer_id: '',
@@ -4284,6 +4287,27 @@ __webpack_require__.r(__webpack_exports__);
       return this.getProducts.filter(function (getProduct) {
         return getProduct.product_name.match(_this3.searchProductFilter);
       });
+    },
+    qty: function qty() {
+      var sum = 0;
+
+      for (var i = 0; i < this.carts.length; i++) {
+        sum += parseFloat(this.carts[i].pro_quantity);
+      }
+
+      return sum;
+    },
+    subtotal: function subtotal() {
+      var subtotal = 0;
+
+      for (var i = 0; i < this.carts.length; i++) {
+        subtotal += parseFloat(this.carts[i].pro_quantity) * parseFloat(this.carts[i].product_price);
+      }
+
+      return subtotal;
+    },
+    total: function total() {
+      return parseFloat(this.subtotal) * this.data_extra.vat / 100 + this.subtotal;
     }
   },
   methods: {
@@ -4351,6 +4375,14 @@ __webpack_require__.r(__webpack_exports__);
       axios.get("/api/cart/decrement/".concat(item)).then(function () {
         Reload.$emit('AfterAdd');
         Notifications.success();
+      })["catch"]();
+    },
+    extras: function extras() {
+      var _this9 = this;
+
+      axios.get('/api/extras').then(function (_ref7) {
+        var data = _ref7.data;
+        return _this9.data_extra = data;
       })["catch"]();
     }
   }
@@ -35718,18 +35750,27 @@ var render = function() {
                           _c("td", [_vm._v(_vm._s(cart.pro_name))]),
                           _vm._v(" "),
                           _c("td", [
-                            _c(
-                              "button",
-                              {
-                                staticClass: "btn btn-sm btn-danger",
-                                on: {
-                                  click: function($event) {
-                                    return _vm.increment(cart.id)
-                                  }
-                                }
-                              },
-                              [_vm._v("-")]
-                            ),
+                            cart.pro_quantity >= 2
+                              ? _c(
+                                  "button",
+                                  {
+                                    staticClass: "btn btn-sm btn-danger",
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.increment(cart.id)
+                                      }
+                                    }
+                                  },
+                                  [_vm._v("-")]
+                                )
+                              : _c(
+                                  "button",
+                                  {
+                                    staticClass: "btn btn-sm btn-danger",
+                                    attrs: { disabled: "" }
+                                  },
+                                  [_vm._v("-")]
+                                ),
                             _vm._v(" "),
                             _c("input", {
                               staticStyle: { width: "20px" },
@@ -35780,7 +35821,57 @@ var render = function() {
             ),
             _vm._v(" "),
             _c("div", { staticClass: "card-footer" }, [
-              _vm._m(2),
+              _c("ul", { staticClass: "list-group" }, [
+                _c(
+                  "li",
+                  {
+                    staticClass:
+                      "list-group-item d-flex justify-content-between align-items-center"
+                  },
+                  [
+                    _vm._v(
+                      "\n                                Total Quantity: "
+                    ),
+                    _c("strong", [_vm._v(_vm._s(_vm.qty))])
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "li",
+                  {
+                    staticClass:
+                      "list-group-item d-flex justify-content-between align-items-center"
+                  },
+                  [
+                    _vm._v("\n                                Sub Total: "),
+                    _c("strong", [_vm._v(_vm._s(_vm.subtotal) + " $")])
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "li",
+                  {
+                    staticClass:
+                      "list-group-item d-flex justify-content-between align-items-center"
+                  },
+                  [
+                    _vm._v("\n                                Vat: "),
+                    _c("strong", [_vm._v(_vm._s(_vm.data_extra.vat) + " %")])
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "li",
+                  {
+                    staticClass:
+                      "list-group-item d-flex justify-content-between align-items-center"
+                  },
+                  [
+                    _vm._v("\n                                Total: "),
+                    _c("strong", [_vm._v(_vm._s(_vm.total) + " $")])
+                  ]
+                )
+              ]),
               _vm._v(" "),
               _c("br"),
               _vm._v(" "),
@@ -35943,7 +36034,7 @@ var render = function() {
       _vm._v(" "),
       _c("div", { staticClass: "col-xl-7 col-lg-7" }, [
         _c("div", { staticClass: "card mb-4" }, [
-          _vm._m(3),
+          _vm._m(2),
           _vm._v(" "),
           _c("div", { staticClass: "card-body" }, [
             _c(
@@ -35953,7 +36044,7 @@ var render = function() {
                 attrs: { id: "myTab", role: "tablist" }
               },
               [
-                _vm._m(4),
+                _vm._m(3),
                 _vm._v(" "),
                 _vm._l(_vm.categories, function(category) {
                   return _c(
@@ -36168,43 +36259,56 @@ var render = function() {
                                 }
                               },
                               [
-                                _c("a", { attrs: { href: "#" } }, [
-                                  _c("img", {
-                                    staticClass:
-                                      "card-img-top em_photo_product",
-                                    attrs: {
-                                      src: getProduct.image,
-                                      alt: getProduct.product_name
+                                _c(
+                                  "button",
+                                  {
+                                    staticClass: "btn btn-sm",
+                                    on: {
+                                      click: function($event) {
+                                        $event.preventDefault()
+                                        return _vm.AddToCart(getProduct.id)
+                                      }
                                     }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("div", { staticClass: "card-body" }, [
-                                    _c("h5", { staticClass: "card-title" }, [
-                                      _vm._v(_vm._s(getProduct.product_name))
-                                    ]),
+                                  },
+                                  [
+                                    _c("img", {
+                                      staticClass: "card-img-top img-fluid",
+                                      attrs: {
+                                        src: getProduct.image,
+                                        alt: getProduct.product_name
+                                      }
+                                    }),
                                     _vm._v(" "),
-                                    getProduct.product_quantity >= 1
-                                      ? _c(
-                                          "span",
-                                          {
-                                            staticClass: "badge badge-success"
-                                          },
-                                          [
-                                            _vm._v(
-                                              "Available " +
-                                                _vm._s(
-                                                  getProduct.product_quantity
-                                                )
-                                            )
-                                          ]
-                                        )
-                                      : _c(
-                                          "span",
-                                          { staticClass: "badge badge-danger" },
-                                          [_vm._v("Stock Out")]
-                                        )
-                                  ])
-                                ])
+                                    _c("div", { staticClass: "card-body" }, [
+                                      _c("h5", { staticClass: "card-title" }, [
+                                        _vm._v(_vm._s(getProduct.product_name))
+                                      ]),
+                                      _vm._v(" "),
+                                      getProduct.product_quantity >= 1
+                                        ? _c(
+                                            "span",
+                                            {
+                                              staticClass: "badge badge-success"
+                                            },
+                                            [
+                                              _vm._v(
+                                                "Available " +
+                                                  _vm._s(
+                                                    getProduct.product_quantity
+                                                  )
+                                              )
+                                            ]
+                                          )
+                                        : _c(
+                                            "span",
+                                            {
+                                              staticClass: "badge badge-danger"
+                                            },
+                                            [_vm._v("Stock Out")]
+                                          )
+                                    ])
+                                  ]
+                                )
                               ]
                             )
                           ]
@@ -36260,60 +36364,6 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Action")])
       ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("ul", { staticClass: "list-group" }, [
-      _c(
-        "li",
-        {
-          staticClass:
-            "list-group-item d-flex justify-content-between align-items-center"
-        },
-        [
-          _vm._v("\n                                Total Quantity: "),
-          _c("strong", [_vm._v("500")])
-        ]
-      ),
-      _vm._v(" "),
-      _c(
-        "li",
-        {
-          staticClass:
-            "list-group-item d-flex justify-content-between align-items-center"
-        },
-        [
-          _vm._v("\n                                Sub Total: "),
-          _c("strong", [_vm._v("500.00 $")])
-        ]
-      ),
-      _vm._v(" "),
-      _c(
-        "li",
-        {
-          staticClass:
-            "list-group-item d-flex justify-content-between align-items-center"
-        },
-        [
-          _vm._v("\n                                Vat: "),
-          _c("strong", [_vm._v("35 %")])
-        ]
-      ),
-      _vm._v(" "),
-      _c(
-        "li",
-        {
-          staticClass:
-            "list-group-item d-flex justify-content-between align-items-center"
-        },
-        [
-          _vm._v("\n                                Total: "),
-          _c("strong", [_vm._v("1500.00 $")])
-        ]
-      )
     ])
   },
   function() {

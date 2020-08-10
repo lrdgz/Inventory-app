@@ -39,3 +39,6 @@ Route::get('/cart/product', 'Api\CartController@cartProduc');
 Route::get('/cart/remove/{id}', 'Api\CartController@removeCart');
 Route::get('/cart/increment/{id}', 'Api\CartController@incrementCart');
 Route::get('/cart/decrement/{id}', 'Api\CartController@decrementCart');
+
+
+Route::get('extras', 'Api\CartController@extras');
